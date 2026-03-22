@@ -1,4 +1,4 @@
-configured_endpoints: 19
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/xjtu-yeanhua%2Feos-trial-21652c2d2e6a5aab678ca435ba09ef698ff34270021f349660b84d5d98bf3923.yml
-openapi_spec_hash: 356a7298b2abac3fdf72ad5ee046b952
-config_hash: 4b6513d5f49edf0726039808bb1b8610
+configured_endpoints: 2
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/xjtu-yeanhua%2Feos-trial-1ca59920be95af5af0635ca5d63c1a3c86abae6fa715b8cdc316251dd03f9af2.yml
+openapi_spec_hash: 656e1b334a979f0d0d6a1e314cd98eb1
+config_hash: ef1419165b10689a13236c87e88b2fe4

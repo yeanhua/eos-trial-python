@@ -4,8 +4,8 @@ from typing import Sequence
 
 import pytest
 
-from eos_trial._types import FileTypes
-from eos_trial._utils import extract_files
+from eostrial._types import FileTypes
+from eostrial._utils import extract_files
 
 
 def test_removes_files_from_input() -> None:

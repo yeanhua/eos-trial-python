@@ -5,8 +5,8 @@ from typing import Iterator, AsyncIterator
 import httpx
 import pytest
 
-from eos_trial import EosTrial, AsyncEosTrial
-from eos_trial._streaming import Stream, AsyncStream, ServerSentEvent
+from eostrial import EosTrial, AsyncEosTrial
+from eostrial._streaming import Stream, AsyncStream, ServerSentEvent
 
 
 @pytest.mark.asyncio

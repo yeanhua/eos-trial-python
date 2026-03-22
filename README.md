@@ -1,7 +1,7 @@
 # Eos Trial Python API library
 
 <!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/eos_trial.svg?label=pypi%20(stable))](https://pypi.org/project/eos_trial/)
+[![PyPI version](https://img.shields.io/pypi/v/eostrial.svg?label=pypi%20(stable))](https://pypi.org/project/eostrial/)
 
 The Eos Trial Python library provides convenient access to the Eos Trial REST API from any Python 3.9+
 application. The library includes type definitions for all request params and response fields,
@@ -17,7 +17,7 @@ The full API of this library can be found in [api.md](api.md).
 
 ```sh
 # install from PyPI
-pip install eos_trial
+pip install eostrial
 ```
 
 ## Usage
@@ -26,23 +26,22 @@ The full API of this library can be found in [api.md](api.md).
 
 ```python
 import os
-from eos_trial import EosTrial
+from eostrial import EosTrial
 
 client = EosTrial(
-    api_key=os.environ.get("PETSTORE_API_KEY"),  # This is the default and can be omitted
+    api_key=os.environ.get("EOSTRIAL_API_KEY"),  # This is the default and can be omitted
 )
 
-order = client.store.orders.create(
-    pet_id=1,
-    quantity=1,
-    status="placed",
+response = client.memories.add(
+    content="My first memory",
+    user_id="user_123",
 )
-print(order.id)
+print(response.id)
 ```
 
 While you can provide an `api_key` keyword argument,
 we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `PETSTORE_API_KEY="My API Key"` to your `.env` file
+to add `EOSTRIAL_API_KEY="My API Key"` to your `.env` file
 so that your API Key is not stored in source control.
 
 ## Async usage
@@ -52,20 +51,19 @@ Simply import `AsyncEosTrial` instead of `EosTrial` and use `await` with each AP
 ```python
 import os
 import asyncio
-from eos_trial import AsyncEosTrial
+from eostrial import AsyncEosTrial
 
 client = AsyncEosTrial(
-    api_key=os.environ.get("PETSTORE_API_KEY"),  # This is the default and can be omitted
+    api_key=os.environ.get("EOSTRIAL_API_KEY"),  # This is the default and can be omitted
 )
 
 
 async def main() -> None:
-    order = await client.store.orders.create(
-        pet_id=1,
-        quantity=1,
-        status="placed",
+    response = await client.memories.add(
+        content="My first memory",
+        user_id="user_123",
     )
-    print(order.id)
+    print(response.id)
 
 
 asyncio.run(main())
@@ -81,7 +79,7 @@ You can enable this by installing `aiohttp`:
 
 ```sh
 # install from PyPI
-pip install eos_trial[aiohttp]
+pip install eostrial[aiohttp]
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -89,21 +87,20 @@ Then you can enable it by instantiating the client with `http_client=DefaultAioH
 ```python
 import os
 import asyncio
-from eos_trial import DefaultAioHttpClient
-from eos_trial import AsyncEosTrial
+from eostrial import DefaultAioHttpClient
+from eostrial import AsyncEosTrial
 
 
 async def main() -> None:
     async with AsyncEosTrial(
-        api_key=os.environ.get("PETSTORE_API_KEY"),  # This is the default and can be omitted
+        api_key=os.environ.get("EOSTRIAL_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        order = await client.store.orders.create(
-            pet_id=1,
-            quantity=1,
-            status="placed",
+        response = await client.memories.add(
+            content="My first memory",
+            user_id="user_123",
         )
-        print(order.id)
+        print(response.id)
 
 
 asyncio.run(main())
@@ -118,46 +115,32 @@ Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typ
 
 Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
 
-## Nested params
-
-Nested parameters are dictionaries, typed using `TypedDict`, for example:
-
-```python
-from eos_trial import EosTrial
-
-client = EosTrial()
-
-pet = client.pets.create(
-    name="doggie",
-    photo_urls=["string"],
-    category={},
-)
-print(pet.category)
-```
-
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `eos_trial.APIConnectionError` is raised.
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `eostrial.APIConnectionError` is raised.
 
 When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `eos_trial.APIStatusError` is raised, containing `status_code` and `response` properties.
+response), a subclass of `eostrial.APIStatusError` is raised, containing `status_code` and `response` properties.
 
-All errors inherit from `eos_trial.APIError`.
+All errors inherit from `eostrial.APIError`.
 
 ```python
-import eos_trial
-from eos_trial import EosTrial
+import eostrial
+from eostrial import EosTrial
 
 client = EosTrial()
 
 try:
-    client.store.list_inventory()
-except eos_trial.APIConnectionError as e:
+    client.memories.add(
+        content="My first memory",
+        user_id="user_123",
+    )
+except eostrial.APIConnectionError as e:
     print("The server could not be reached")
     print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except eos_trial.RateLimitError as e:
+except eostrial.RateLimitError as e:
     print("A 429 status code was received; we should back off a bit.")
-except eos_trial.APIStatusError as e:
+except eostrial.APIStatusError as e:
     print("Another non-200-range status code was received")
     print(e.status_code)
     print(e.response)
@@ -185,7 +168,7 @@ Connection errors (for example, due to a network connectivity problem), 408 Requ
 You can use the `max_retries` option to configure or disable retry settings:
 
 ```python
-from eos_trial import EosTrial
+from eostrial import EosTrial
 
 # Configure the default for all requests:
 client = EosTrial(
@@ -194,7 +177,10 @@ client = EosTrial(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).store.list_inventory()
+client.with_options(max_retries=5).memories.add(
+    content="My first memory",
+    user_id="user_123",
+)
 ```
 
 ### Timeouts
@@ -203,7 +189,7 @@ By default requests time out after 1 minute. You can configure this with a `time
 which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
 
 ```python
-from eos_trial import EosTrial
+from eostrial import EosTrial
 
 # Configure the default for all requests:
 client = EosTrial(
@@ -217,7 +203,10 @@ client = EosTrial(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).store.list_inventory()
+client.with_options(timeout=5.0).memories.add(
+    content="My first memory",
+    user_id="user_123",
+)
 ```
 
 On timeout, an `APITimeoutError` is thrown.
@@ -255,19 +244,22 @@ if response.my_field is None:
 The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
 
 ```py
-from eos_trial import EosTrial
+from eostrial import EosTrial
 
 client = EosTrial()
-response = client.store.with_raw_response.list_inventory()
+response = client.memories.with_raw_response.add(
+    content="My first memory",
+    user_id="user_123",
+)
 print(response.headers.get('X-My-Header'))
 
-store = response.parse()  # get the object that `store.list_inventory()` would have returned
-print(store)
+memory = response.parse()  # get the object that `memories.add()` would have returned
+print(memory.id)
 ```
 
-These methods return an [`APIResponse`](https://github.com/yeanhua/eos-trial-python/tree/main/src/eos_trial/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/yeanhua/eos-trial-python/tree/main/src/eostrial/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/yeanhua/eos-trial-python/tree/main/src/eos_trial/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/yeanhua/eos-trial-python/tree/main/src/eostrial/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -276,7 +268,10 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.store.with_streaming_response.list_inventory() as response:
+with client.memories.with_streaming_response.add(
+    content="My first memory",
+    user_id="user_123",
+) as response:
     print(response.headers.get("X-My-Header"))
 
     for line in response.iter_lines():
@@ -329,7 +324,7 @@ You can directly override the [httpx client](https://www.python-httpx.org/api/#c
 
 ```python
 import httpx
-from eos_trial import EosTrial, DefaultHttpxClient
+from eostrial import EosTrial, DefaultHttpxClient
 
 client = EosTrial(
     # Or use the `EOS_TRIAL_BASE_URL` env var
@@ -352,7 +347,7 @@ client.with_options(http_client=DefaultHttpxClient(...))
 By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
 
 ```py
-from eos_trial import EosTrial
+from eostrial import EosTrial
 
 with EosTrial() as client:
   # make requests here
@@ -380,8 +375,8 @@ If you've upgraded to the latest version but aren't seeing any new features you 
 You can determine the version that is being used at runtime with:
 
 ```py
-import eos_trial
-print(eos_trial.__version__)
+import eostrial
+print(eostrial.__version__)
 ```
 
 ## Requirements

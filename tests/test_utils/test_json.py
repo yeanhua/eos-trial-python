@@ -5,8 +5,8 @@ from typing import Union
 
 import pydantic
 
-from eos_trial import _compat
-from eos_trial._utils._json import openapi_dumps
+from eostrial import _compat
+from eostrial._utils._json import openapi_dumps
 
 
 class TestOpenapiDumps:
