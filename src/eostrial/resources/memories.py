@@ -8,7 +8,7 @@ import httpx
 
 from ..types import memory_add_params
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
-from .._utils import maybe_transform, async_maybe_transform
+from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
 from .._response import (
@@ -19,6 +19,7 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.memory_add_response import MemoryAddResponse
+from ..types.memory_retrieve_response import MemoryRetrieveResponse
 
 __all__ = ["MemoriesResource", "AsyncMemoriesResource"]
 
@@ -43,12 +44,46 @@ class MemoriesResource(SyncAPIResource):
         """
         return MemoriesResourceWithStreamingResponse(self)
 
+    def retrieve(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MemoryRetrieveResponse:
+        """
+        Retrieve a memory by ID
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return self._get(
+            path_template("/api/v1/memories/{id}", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MemoryRetrieveResponse,
+        )
+
     def add(
         self,
         *,
         content: str,
         user_id: str,
         object_keys: SequenceNotStr[str] | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
         type: Literal["text", "image", "video", "document"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -61,6 +96,8 @@ class MemoriesResource(SyncAPIResource):
         Add a memory (text or multimodal)
 
         Args:
+          tags: User-defined tags
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -76,6 +113,7 @@ class MemoriesResource(SyncAPIResource):
                     "content": content,
                     "user_id": user_id,
                     "object_keys": object_keys,
+                    "tags": tags,
                     "type": type,
                 },
                 memory_add_params.MemoryAddParams,
@@ -107,12 +145,46 @@ class AsyncMemoriesResource(AsyncAPIResource):
         """
         return AsyncMemoriesResourceWithStreamingResponse(self)
 
+    async def retrieve(
+        self,
+        id: str,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> MemoryRetrieveResponse:
+        """
+        Retrieve a memory by ID
+
+        Args:
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not id:
+            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
+        return await self._get(
+            path_template("/api/v1/memories/{id}", id=id),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=MemoryRetrieveResponse,
+        )
+
     async def add(
         self,
         *,
         content: str,
         user_id: str,
         object_keys: SequenceNotStr[str] | Omit = omit,
+        tags: SequenceNotStr[str] | Omit = omit,
         type: Literal["text", "image", "video", "document"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -125,6 +197,8 @@ class AsyncMemoriesResource(AsyncAPIResource):
         Add a memory (text or multimodal)
 
         Args:
+          tags: User-defined tags
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -140,6 +214,7 @@ class AsyncMemoriesResource(AsyncAPIResource):
                     "content": content,
                     "user_id": user_id,
                     "object_keys": object_keys,
+                    "tags": tags,
                     "type": type,
                 },
                 memory_add_params.MemoryAddParams,
@@ -155,6 +230,9 @@ class MemoriesResourceWithRawResponse:
     def __init__(self, memories: MemoriesResource) -> None:
         self._memories = memories
 
+        self.retrieve = to_raw_response_wrapper(
+            memories.retrieve,
+        )
         self.add = to_raw_response_wrapper(
             memories.add,
         )
@@ -164,6 +242,9 @@ class AsyncMemoriesResourceWithRawResponse:
     def __init__(self, memories: AsyncMemoriesResource) -> None:
         self._memories = memories
 
+        self.retrieve = async_to_raw_response_wrapper(
+            memories.retrieve,
+        )
         self.add = async_to_raw_response_wrapper(
             memories.add,
         )
@@ -173,6 +254,9 @@ class MemoriesResourceWithStreamingResponse:
     def __init__(self, memories: MemoriesResource) -> None:
         self._memories = memories
 
+        self.retrieve = to_streamed_response_wrapper(
+            memories.retrieve,
+        )
         self.add = to_streamed_response_wrapper(
             memories.add,
         )
@@ -182,6 +266,9 @@ class AsyncMemoriesResourceWithStreamingResponse:
     def __init__(self, memories: AsyncMemoriesResource) -> None:
         self._memories = memories
 
+        self.retrieve = async_to_streamed_response_wrapper(
+            memories.retrieve,
+        )
         self.add = async_to_streamed_response_wrapper(
             memories.add,
         )
