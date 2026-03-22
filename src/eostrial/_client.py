@@ -102,9 +102,8 @@ class EosTrial(SyncAPIClient):
 
     @cached_property
     def memories(self) -> MemoriesResource:
-        from .resources.memories import MemoriesResource
-
-        return MemoriesResource(self)
+        from .lib._memories_ext import MemoriesResourceWithMultimodal
+        return MemoriesResourceWithMultimodal(self)
 
     @cached_property
     def storage(self) -> StorageResource:
