@@ -7,9 +7,9 @@ import pytest
 import pydantic
 from pydantic import Field
 
-from eos_trial._utils import PropertyInfo
-from eos_trial._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
-from eos_trial._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
+from eostrial._utils import PropertyInfo
+from eostrial._compat import PYDANTIC_V1, parse_obj, model_dump, model_json
+from eostrial._models import DISCRIMINATOR_CACHE, BaseModel, construct_type
 
 
 class BasicModel(BaseModel):

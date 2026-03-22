@@ -8,15 +8,15 @@ from typing_extensions import Required, Annotated, TypedDict
 
 import pytest
 
-from eos_trial._types import Base64FileInput, omit, not_given
-from eos_trial._utils import (
+from eostrial._types import Base64FileInput, omit, not_given
+from eostrial._utils import (
     PropertyInfo,
     transform as _transform,
     parse_datetime,
     async_transform as _async_transform,
 )
-from eos_trial._compat import PYDANTIC_V1
-from eos_trial._models import BaseModel
+from eostrial._compat import PYDANTIC_V1
+from eostrial._models import BaseModel
 
 _T = TypeVar("_T")
 

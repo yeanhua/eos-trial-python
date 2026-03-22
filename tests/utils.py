@@ -8,8 +8,8 @@ from typing import Any, TypeVar, Iterator, Sequence, cast
 from datetime import date, datetime
 from typing_extensions import Literal, get_args, get_origin, assert_type
 
-from eos_trial._types import Omit, NoneType
-from eos_trial._utils import (
+from eostrial._types import Omit, NoneType
+from eostrial._utils import (
     is_dict,
     is_list,
     is_list_type,
@@ -19,8 +19,8 @@ from eos_trial._utils import (
     is_annotated_type,
     is_type_alias_type,
 )
-from eos_trial._compat import PYDANTIC_V1, field_outer_type, get_model_fields
-from eos_trial._models import BaseModel
+from eostrial._compat import PYDANTIC_V1, field_outer_type, get_model_fields
+from eostrial._models import BaseModel
 
 BaseModelT = TypeVar("BaseModelT", bound=BaseModel)
 
