@@ -3,11 +3,12 @@
 Types:
 
 ```python
-from eostrial.types import MemoryAddResponse
+from eostrial.types import MemoryRetrieveResponse, MemoryAddResponse
 ```
 
 Methods:
 
+- <code title="get /api/v1/memories/{id}">client.memories.<a href="./src/eostrial/resources/memories.py">retrieve</a>(id) -> <a href="./src/eostrial/types/memory_retrieve_response.py">MemoryRetrieveResponse</a></code>
 - <code title="post /api/v1/memories">client.memories.<a href="./src/eostrial/resources/memories.py">add</a>(\*\*<a href="src/eostrial/types/memory_add_params.py">params</a>) -> <a href="./src/eostrial/types/memory_add_response.py">MemoryAddResponse</a></code>
 
 # Storage
